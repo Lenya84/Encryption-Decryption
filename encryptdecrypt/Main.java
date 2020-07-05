@@ -2,19 +2,38 @@ package encryptdecrypt;
 import java.util.Scanner;
 
 public class Main {
+
+    static String encryption(char[] text, int key) {
+        StringBuilder str = new StringBuilder();
+
+        for (char ch : text) {
+            str.append((char) (ch + key));
+        }
+
+        return str.toString();
+    }
+
+    static String decryption(char[] text, int key) {
+        StringBuilder str = new StringBuilder();
+
+        for (char ch : text) {
+            str.append((char) (ch - key));
+        }
+
+        return str.toString();
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        char[] arr = scanner.nextLine().toCharArray();
+
+        String mode = scanner.nextLine();
+        char[] text = scanner.nextLine().toCharArray();
         int key = scanner.nextInt();
         
-        for (char ch : arr) {
-            if (ch >= 97 && ch <= 122) {
-                int letter = key + ch;
-                System.out.print(letter <= 122 ? (char) letter : (char) (letter - 122 + 96));
-                continue;
-            }
-            
-            System.out.print(ch);
+        if ("enc".equals(mode)) {
+            System.out.println(encryption(text, key));
+        } else if ("dec".equals(mode)) {
+            System.out.println(decryption(text, key));
         }
     }
 }
