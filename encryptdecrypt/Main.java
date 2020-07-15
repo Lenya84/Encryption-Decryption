@@ -6,42 +6,13 @@ import java.util.Scanner;
 
 public class Main {
 
-    static String encryption(String data, int key) {
-        StringBuilder str = new StringBuilder();
-
-        for (char ch : data.toCharArray()) {
-            str.append((char) (ch + key));
-        }
-
-        return str.toString();
-    }
-
-    static String decryption(String data, int key) {
-        StringBuilder str = new StringBuilder();
-
-        for (char ch : data.toCharArray()) {
-            str.append((char) (ch - key));
-        }
-
-        return str.toString();
-    }
-
-    static String encoder(String data, int key, String mode) {
-        if ("enc".equals(mode)) {
-            return encryption(data, key);
-        } else if ("dec".equals(mode)) {
-            return decryption(data, key);
-        }
-
-        return "1111";
-    }
-
     public static void main(String[] args) {
 
         String mode = "enc";
         String data = "";
         String inPathFile = "";
         String outPathFile = "";
+        String alg = "shift";
         int key = 0;
 
         for (int i = 0; i < args.length - 1; i += 2) {
@@ -55,8 +26,13 @@ public class Main {
                 inPathFile = args[i + 1];
             } else if ("-out".equals(args[i])) {
                 outPathFile = args[i + 1];
+            } else if ("-alg".equals(args[i])) {
+                alg = args[i + 1];
             }
         }
+
+        EncoderDecoder coder = new EncoderDecoder();
+        coder.setMethod(alg);
 
         if (!inPathFile.isEmpty() && data.isEmpty()) {
             File inFile = new File(inPathFile);
@@ -71,10 +47,10 @@ public class Main {
         }
 
         if (outPathFile.isEmpty()) {
-            System.out.print(encoder(data, key, mode));
+            System.out.print(coder.modeCryption(data, key, mode));
         } else {
             try (FileWriter writer = new FileWriter(outPathFile)) {
-                writer.write(encoder(data, key, mode));
+                writer.write(coder.modeCryption(data, key, mode));
             } catch (IOException e) {
                 System.out.print("Error");
             }
